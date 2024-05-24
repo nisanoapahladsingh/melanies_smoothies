@@ -30,10 +30,16 @@ if ingredients_list:
     st.text(ingredients_list)
     ingredients_string = ''
     for x in ingredients_list:
+        
         ingredients_string += x + ' '
-
         search_on = pd_df.loc[pd_df['FRUIT_NAME']==x,'SEARCH_ON'].iloc[0]
         st.write('The search value for', x, ' is ', search_on, '.')
+        
+        st.subheader(x + 'Nutrition Information')
+        fruityvice_response = requests.get("https://fruityvice.com/api/fruit/watermelon" + x)
+        fv_df = st.dataframe(data=fruityvice_response.json(), use_container_width=True)
+       
+        
     st.write(ingredients_string)
     my_insert_stmt = """ insert into smoothies.public.orders(ingredients, name_on_order)
                 values ('""" +ingredients_string +"""', '""" +name_on_order+"""')"""
